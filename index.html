@@ -879,5 +879,279 @@
         if (savedAvatar) document.getElementById('profileAvatarImg').src = savedAvatar;
     });
 </script>
+    <!-- ===================================================================== -->
+<!-- EXPANSION PACK: PLAYSTATION, XBOX & SEGA (60 SPEL + SÖK & FILTER)     -->
+<!-- Klistra in detta block precis före </body> i din index.html på GitHub -->
+<!-- ===================================================================== -->
+<style>
+  #retro-expansion-hub {
+    max-width: 1150px;
+    margin: 40px auto 60px;
+    padding: 28px;
+    background: linear-gradient(145deg, #07190e 0%, #030b06 100%);
+    border: 1px solid rgba(0, 255, 102, 0.35);
+    border-radius: 18px;
+    box-shadow: 0 0 30px rgba(0, 255, 102, 0.15);
+    color: #eafff2;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+  .exp-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(0, 255, 102, 0.25);
+  }
+  .exp-header h2 {
+    font-size: 1.9rem;
+    color: #00ff66;
+    text-shadow: 0 0 12px rgba(0, 255, 102, 0.4);
+    margin-bottom: 6px;
+  }
+  .exp-header p {
+    color: #88b89b;
+    font-size: 0.95rem;
+  }
+
+  /* Sökruta & Filter */
+  .exp-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  #exp-search {
+    flex: 1 1 280px;
+    max-width: 420px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #00ff66;
+    background: #041209;
+    color: #eafff2;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: inset 0 0 8px rgba(0, 255, 102, 0.15);
+  }
+  #exp-search::placeholder { color: #66997a; }
+  .exp-filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .exp-btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 102, 0.35);
+    background: #0b2415;
+    color: #eafff2;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .exp-btn:hover, .exp-btn.active {
+    background: #00ff66;
+    color: #030b06;
+    box-shadow: 0 0 14px rgba(0, 255, 102, 0.5);
+  }
+
+  /* Aktiv Spelarena */
+  #exp-arena-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #020804;
+    border: 2px solid #00ff66;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 0 25px rgba(0, 255, 102, 0.2);
+  }
+  .exp-hud {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  #exp-canvas {
+    width: 100%;
+    max-width: 640px;
+    height: 340px;
+    background: #041008;
+    border: 1px solid rgba(0, 255, 102, 0.4);
+    border-radius: 8px;
+    display: block;
+    touch-action: none;
+  }
+  .exp-touch-pad {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .exp-pad-btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1px solid #00ff66;
+    background: #0a2213;
+    color: #00ff66;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+  }
+  .exp-pad-btn:active { background: #00ff66; color: #030b06; }
+
+  /* Konsolsektioner & Spelgrid */
+  .console-section {
+    margin-top: 28px;
+  }
+  .console-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  .ps-theme { background: rgba(0, 112, 209, 0.2); border-left: 5px solid #0070d1; color: #66b8ff; }
+  .xbox-theme { background: rgba(16, 124, 16, 0.25); border-left: 5px solid #107c10; color: #5ce65c; }
+  .sega-theme { background: rgba(0, 137, 207, 0.2); border-left: 5px solid #00a8ff; color: #70d6ff; }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 10px;
+  }
+  .game-card {
+    background: #081c10;
+    border: 1px solid rgba(0, 255, 102, 0.22);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .game-card:hover {
+    transform: translateY(-2px);
+    border-color: #00ff66;
+  }
+  .game-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .game-name { font-weight: 700; font-size: 0.95rem; color: #eafff2; }
+  .game-tag {
+    font-size: 0.7rem;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgba(0, 255, 102, 0.15);
+    color: #00ff66;
+    white-space: nowrap;
+  }
+  .play-mini-btn {
+    width: 100%;
+    padding: 7px;
+    border: none;
+    border-radius: 7px;
+    background: linear-gradient(90deg, #00cc52, #00ff66);
+    color: #030b06;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .play-mini-btn:hover { filter: brightness(1.12); }
+</style>
+
+<section id="retro-expansion-hub">
+  <div class="exp-header">
+    <h2>🎮 Multi-Console Arcade Expansion (60 Nya Spel)</h2>
+    <p>PlayStation • Xbox • Sega — Sök bland alla 60 titlar, filtrera på konsol/genre och spela direkt i hubben!</p>
+  </div>
+
+  <!-- Sökruta & Extra Alternativ -->
+  <div class="exp-controls">
+    <input type="text" id="exp-search" placeholder="🔍 Sök spel (t.ex. Sonic, Halo, Tekken, Racer, Space)..." oninput="filterExpansionGames()">
+    <div class="exp-filter-group">
+      <button class="exp-btn active" onclick="setConsoleFilter('ALL', this)">Alla (60)</button>
+      <button class="exp-btn" onclick="setConsoleFilter('PS', this)">🔵 PlayStation (20)</button>
+      <button class="exp-btn" onclick="setConsoleFilter('XBOX', this)">🟢 Xbox (20)</button>
+      <button class="exp-btn" onclick="setConsoleFilter('SEGA', this)">🔷 Sega (20)</button>
+      <button class="exp-btn" onclick="pickRandomGame()">🎲 Slumpa Spel</button>
+    </div>
+  </div>
+
+  <!-- Spelskärm för valt spel -->
+  <div id="exp-arena-wrap">
+    <div class="exp-hud">
+      <span id="exp-active-title">🕹 Välj ett spel nedan för att starta!</span>
+      <span id="exp-active-mode" style="color:#88b89b; font-size:0.85rem;">Läge: Demo</span>
+      <span id="exp-score" style="color:#00ff66;">Poäng: 0</span>
+    </div>
+    <canvas id="exp-canvas" width="640" height="340"></canvas>
+    <div class="exp-touch-pad">
+      <button class="exp-pad-btn" onmousedown="expKey('left',true)" onmouseup="expKey('left',false)" ontouchstart="expKey('left',true)" ontouchend="expKey('left',false)">◀ Vänster</button>
+      <button class="exp-pad-btn" onmousedown="expKey('up',true)" onmouseup="expKey('up',false)" ontouchstart="expKey('up',true)" ontouchend="expKey('up',false)">▲ Upp / Hoppa</button>
+      <button class="exp-pad-btn" onmousedown="expKey('down',true)" onmouseup="expKey('down',false)" ontouchstart="expKey('down',true)" ontouchend="expKey('down',false)">▼ Ner</button>
+      <button class="exp-pad-btn" onmousedown="expKey('right',true)" onmouseup="expKey('right',false)" ontouchstart="expKey('right',true)" ontouchend="expKey('right',false)">Höger ▶</button>
+      <button class="exp-pad-btn" onclick="expAction()">🔥 Action / Skjut (Space)</button>
+    </div>
+  </div>
+
+  <!-- 3 Konsolsektioner -->
+  <div id="sec-PS" class="console-section">
+    <div class="console-title ps-theme"><span>🔵 PlayStation Classic & Arcade Hub</span><span>20 Spel</span></div>
+    <div id="grid-PS" class="games-grid"></div>
+  </div>
+
+  <div id="sec-XBOX" class="console-section">
+    <div class="console-title xbox-theme"><span>🟢 Xbox Live Arcade Hub</span><span>20 Spel</span></div>
+    <div id="grid-XBOX" class="games-grid"></div>
+  </div>
+
+  <div id="sec-SEGA" class="console-section">
+    <div class="console-title sega-theme"><span>🔷 Sega Mega Drive & Arcade Hub</span><span>20 Spel</span></div>
+    <div id="grid-SEGA" class="games-grid"></div>
+  </div>
+</section>
+
+<script>
+(function() {
+  // Databas med 60 spel (20 PS, 20 Xbox, 20 Sega) kopplade till 4 spelbara arkadmotorer:
+  // 'racer' (undvik hinder), 'shooter' (rymdskepp/skjut), 'jumper' (hoppa/samla), 'reflex' (klicka/fånga mål)
+  const EXP_GAMES = [
+    // PLAYSTATION (20)
+    { c:'PS', name:'Gran Turismo Neon', genre:'Racing', engine:'racer', color:'#3399ff' },
+    { c:'PS', name:'Tekken Cyber Reflex', genre:'Fighting', engine:'reflex', color:'#66b8ff' },
+    { c:'PS', name:'Wipeout Anti-Grav', genre:'Racing', engine:'racer', color:'#00ccff' },
+    { c:'PS', name:'Metal Gear Stealth', genre:'Action', engine:'jumper', color:'#4da6ff' },
+    { c:'PS', name:'Crash Bandicoot Run', genre:'Plattform', engine:'jumper', color:'#ff9933' },
+    { c:'PS', name:'Spyro Gem Collector', genre:'Äventyr', engine:'jumper', color:'#b366ff' },
+    { c:'PS', name:'Resident Bio-Shooter', genre:'Shooter', engine:'shooter', color:'#ff4d4d' },
+    { c:'PS', name:'Final Fantasy Blitz', genre:'RPG', engine:'reflex', color:'#33ccff' },
+    { c:'PS', name:'Ridge Racer Drift', genre:'Racing', engine:'racer', color:'#0088ff' },
+    { c:'PS', name:'Ace Combat Sky', genre:'Flyg', engine:'shooter', color:'#66d9ff' },
+    { c:'PS', name:'Tony Hawk Neon Skate', genre:'Sport', engine:'jumper', color:'#00ff99' },
+    { c:'PS', name:'Ratchet Galactic', genre:'Shooter', engine:'shooter', color:'#ffaa00' },
+    { c:'PS', name:'Jak & Daxter Dash', genre:'Plattform', engine:'jumper', color:'#80ff80' },
+    { c:'PS', name:'God of War Arena', genre:'Action', engine:'reflex', color:'#ff3333' },
+    { c:'PS', name:'Sly Cooper Heist', genre:'Stealth', engine:'jumper', color:'#3399ff' },
+    { c:'PS', name:'Killzone Orbital', genre:'Shooter', engine:'shooter', color:'#ff6600' },
+    { c:'PS', name:'MotorStorm Canyon', genre:'Racing', engine:'racer', color:'#ffcc00' },
+    { c:'PS', name:'LittleBig Jump', genre:'Plattform', engine:'jumper', color:'#ff66cc' },
+    { c:'PS', name:'Astro Bot Rescue', genre:'Arkad', engine:'jumper', color:'#00e6e6' },
+    { c:'PS', name:'PSX Starfighter', genre:'Shooter', engine:'shooter', color:'#4d94ff' },
+
+    // XBOX (20)
+
 </body>
 </html>
