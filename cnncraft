@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>David Pedersen Pino | Ultimate Media & Retro Hub v9</title>
+    <style>
+        :root {
+            --bg-dark: #030b06;
+            --card-bg: #08180e;
+            --neon-green: #00ff66;
+            --neon-emerald: #00cc52;
+            --spotify: #1db954;
+            --gb-green: #8bac0f;
+            --nes-red: #ff2a3c;
+            --text: #eafff2;
+            --text-dim: #88b89b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body {
+            background: radial-gradient(circle at top center, #0c3b1e 0%, #05180c 45%, var(--bg-dark) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 18px rgba(0, 255, 102, 0.35), inset 0 0 10px rgba(0, 255, 102, 0.12); }
+            50% { box-shadow: 0 0 32px rgba(0, 255, 102, 0.7), inset 0 0 18px rgba(0, 255, 102, 0.25); }
+        }
+
+        header.hero {
+            text-align: center;
+            padding: 32px 20px 24px;
+            background: linear-gradient(180deg, rgba(0, 255, 102, 0.16) 0%, rgba(3, 11, 6, 0) 100%);
+            border-bottom: 1px solid rgba(0, 255, 102, 0.28);
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 20px;
+            background: rgba(0, 255, 102, 0.14);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+        }
+        .hero h1 {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            background: linear-gradient(90deg, #ffffff, var(--neon-green), #7dffb3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hub-wrapper {
+            display: grid;
+            grid-template-columns: 250px 1fr 250px;
+            gap: 20px;
+            max-width: 1520px;
+            margin: 0 auto;
+            padding: 25px 20px 60px;
+            align-items: start;
+        }
+        @media (max-width: 1100px) {
+            .hub-wrapper { grid-template-columns: 1fr; }
+        }
+
+        .side-col { display: flex; flex-direction: column; gap: 11px; }
+        .col-label {
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--neon-green);
+            padding-left: 6px;
+        }
+
+        .nav-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 102, 0.38);
+            border-radius: 14px;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.14);
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+        .nav-card:hover, .nav-card.active {
+            transform: translateY(-2px) scale(1.02);
+            border-color: var(--neon-green);
+            background: #0d2918;
+            box-shadow: 0 0 24px rgba(0, 255, 102, 0.65), inset 0 0 12px rgba(0, 255, 102, 0.2);
+        }
+        .nav-card .icon { font-size: 1.55rem; flex-shrink: 0; }
+        .nav-card .num { font-size: 0.66rem; color: var(--neon-green); font-weight: bold; display: block; }
+        .nav-card h3 { font-size: 0.94rem; margin-bottom: 2px; }
+        .nav-card p { font-size: 0.74rem; color: var(--text-dim); line-height: 1.25; }
+
+        .center-column { display: flex; flex-direction: column; gap: 28px; }
+        .app-stage {
+            background: var(--card-bg);
+            border: 2px solid var(--neon-green);
+            border-radius: 20px;
+            padding: 26px;
+            min-height: 520px;
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+        .app-section { display: none; }
+        .app-section.active { display: block; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        h2.section-title { font-size: 1.48rem; margin-bottom: 14px; color: #fff; text-shadow: 0 0 10px rgba(0,255,102,0.4); }
+
+        .btn {
+            background: linear-gradient(90deg, var(--neon-emerald), var(--neon-green));
+            color: #021207;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.35);
+        }
+        .btn:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(0, 255, 102, 0.75); }
+        .btn-secondary { background: #102e1c; color: #fff; border: 1px solid rgba(0,255,102,0.35); box-shadow: none; }
+        .btn-danger { background: #d91e36; color: #fff; box-shadow: none; }
+        input[type="text"], input[type="password"], textarea, select {
+            background: #051109;
+            border: 1px solid rgba(0, 255, 102, 0.38);
+            color: #fff;
+            padding: 10px 13px;
+            border-radius: 8px;
+            font-size: 0.94rem;
+        }
+        input[type="text"], input[type="password"] { width: 100%; max-width: 420px; }
+
+        .cinema-box { background: #000; border-radius: 12px; padding: 12px; border: 1px solid var(--neon-green); margin-top: 14px; }
+        video { width: 100%; border-radius: 8px; max-height: 380px; }
+
+        /* Consoles */
+        .console-wrapper { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+        .game-list { flex: 1; min-width: 220px; }
+        .game-item {
+            padding: 11px 14px;
+            background: #06140b;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid rgba(0, 255, 102, 0.25);
+        }
+        .game-item:hover, .game-item.selected {
+            background: #0f331d;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.45);
+        }
+        .handheld-screen {
+            width: 340px;
+            padding: 18px;
+            border-radius: 16px;
+            text-align: center;
+            border: 3px solid var(--neon-green);
+        }
+        .gb-theme { background: #9bbc0f; color: #0f380f; }
+        .nes-theme { background: #0c0f0d; color: #fff; border-color: var(--nes-red); }
+        canvas.game-canvas { width: 100%; height: 220px; border-radius: 6px; display: block; margin: 10px 0; background: #000; }
+        .gb-theme canvas.game-canvas { background: #8bac0f; border: 2px solid #0f380f; }
+        .dpad-controls { display: flex; justify-content: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .dpad-btn { background: rgba(0,0,0,0.45); color: inherit; border: 1px solid currentColor; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+        /* Profile Footer */
+        .profile-footer-card {
+            margin: 0 auto;
+            max-width: 440px;
+            width: 100%;
+            background: #07190e;
+            border: 2px solid var(--neon-green);
+            border-radius: 22px;
+            padding: 22px;
+            text-align: center;
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+        .profile-avatar-ring {
+            width: 128px;
+            height: 128px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            padding: 5px;
+            background: linear-gradient(135deg, var(--neon-green), #7dffb3, #00aa44);
+            box-shadow: 0 0 28px rgba(0, 255, 102, 0.85);
+            cursor: pointer;
+        }
+        .profile-avatar-ring img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: #041008; display: block; }
+        .profile-name { font-size: 1.32rem; font-weight: bold; color: #fff; text-shadow: 0 0 12px rgba(0, 255, 102, 0.75); margin-bottom: 6px; }
+
+        /* AI Chat formatting */
+        .ai-msg { padding: 11px 14px; border-radius: 10px; line-height: 1.45; }
+        .ai-msg-bot { background: #0d2918; border-left: 3px solid var(--neon-green); }
+        .ai-msg-user { background: #133e24; border-left: 3px solid #7dffb3; }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="hero-badge">ULTIMATE MEDIA & RETRO HUB • V9 GEMINI 3.8</div>
+    <h1>David Pedersen Pino</h1>
+</header>
+
+<div class="hub-wrapper">
+    <!-- LEFT COLUMN -->
+    <aside class="side-col">
+        <div class="col-label">📺 TV, Film & Ljud</div>
+        <div class="nav-card active" onclick="openTab('pluto', this)">
+            <span class="icon">📺</span>
+            <div><span class="num">01 / LIVE TV</span><h3>Pluto TV Hub</h3><p>Gratis live-TV & egna strömmar</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('movies', this)">
+            <span class="icon">🎬</span>
+            <div><span class="num">02 / FILMER</span><h3>Köpta Filmer</h3><p>Hulk, Terminator & YouTube</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('cinema', this)">
+            <span class="icon">🍿</span>
+            <div><span class="num">03 / HEMMABIO</span><h3>MP4 Biosalong</h3><p>Spela egna videofiler</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('mp3', this)">
+            <span class="icon">🎧</span>
+            <div><span class="num">04 / AUDIO</span><h3>MP3 Spelare</h3><p>Ladda upp & lyssna lokalt</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('radio', this)">
+            <span class="icon">📻</span>
+            <div><span class="num">05 / LIVE RADIO</span><h3>Sveriges Radio</h3><p>P3, P1 & P4 direkt i hubben</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('soundboard', this)">
+            <span class="icon">🔊</span>
+            <div><span class="num">06 / EFFEKTER</span><h3>DJ Soundboard</h3><p>Ljudeffekter med ett tryck</p></div>
+        </div>
+    </aside>
+
+    <!-- CENTER STAGE -->
+    <main class="center-column">
+        <div class="app-stage">
+
+            <!-- 01 PLUTO TV -->
+            <div id="pluto" class="app-section active">
+                <h2 class="section-title">📺 Pluto TV & Live-Kanaler</h2>
+                <p style="color: var(--text-dim); margin-bottom: 14px;">Starta svenska Pluto TV-kanaler i ett rent TV-fönster eller klistra in en direkt video-/strömlänk.</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 10px; margin-bottom: 18px;">
+                    <button class="btn" onclick="openSmartUrl('https://pluto.tv/se/live-tv')">📺 Pluto Live-Guide</button>
+                    <button class="btn btn-secondary" onclick="openSmartUrl('https://pluto.tv/se/on-demand')">🎬 On Demand</button>
+                    <button class="btn btn-secondary" onclick="openSmartUrl('https://pluto.tv/se/live-tv/pluto-tv-action-se')">💥 Pluto Action</button>
+                    <button class="btn btn-secondary" onclick="openSmartUrl('https://pluto.tv/se/live-tv/pluto-tv-comedy-se')">😂 Pluto Comedy</button>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="text" id="plutoInput" placeholder="Klistra in .mp4 länk eller Pluto/YouTube URL...">
+                    <button class="btn" onclick="handlePlutoLink()">▶ Spela / Öppna</button>
+                </div>
+                <div class="cinema-box"><video id="plutoVideo" controls playsinline></video></div>
+            </div>
+
+            <!-- 02 MOVIES -->
+            <div id="movies" class="app-section">
+                <h2 class="section-title">🎬 Mina Köpta Filmer & Biohylla</h2>
+                <div style="margin-bottom: 16px;">
+                    <button class="btn" onclick="openSmartUrl('https://www.youtube.com/feed/storefront?bp=ogUCKAQ%3D')">▶ Öppna YouTube Köpta Filmer</button>
+                </div>
+                <div id="movieGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;"></div>
+                <h3 style="font-size: 1rem; margin-bottom: 8px;">➕ Lägg till egen film i hyllan</h3>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <input type="text" id="newMovieTitle" placeholder="Filmtitel..." style="max-width: 200px;">
+                    <input type="text" id="newMovieUrl" placeholder="YouTube-länk..." style="max-width: 260px;">
+                    <button class="btn" onclick="addCustomMovie()">Spara Film</button>
+                    <button class="btn btn-secondary" onclick="resetMovies()">Återställ</button>
+                </div>
+            </div>
+
+            <!-- 03 CINEMA -->
+            <div id="cinema" class="app-section">
+                <h2 class="section-title">🍿 Hemmabio MP4-Spelare</h2>
+                <input type="file" accept="video/*" onchange="loadLocalVideo(this)">
+                <div class="cinema-box"><video id="localVideoPlayer" controls></video></div>
+            </div>
+
+            <!-- 04 MP3 -->
+            <div id="mp3" class="app-section">
+                <h2 class="section-title">🎧 Lokal MP3-Spelare</h2>
+                <input type="file" accept="audio/*" multiple onchange="loadMp3Files(this)">
+                <audio id="audioPlayer" controls style="width: 100%; margin-top: 15px;"></audio>
+                <div id="mp3List" style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+
+            <!-- 05 RADIO -->
+            <div id="radio" class="app-section">
+                <h2 class="section-title">📻 Sveriges Radio Live</h2>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
+                    <button class="btn" onclick="playRadio('https://sverigesradio.se/topsy/direkt/164-hi-mp3.m3u', 'https://http-live.sr.se/p3-mp3-192')">🎵 SR P3</button>
+                    <button class="btn btn-secondary" onclick="playRadio('', 'https://http-live.sr.se/p1-mp3-192')">🎙️ SR P1</button>
+                    <button class="btn btn-secondary" onclick="playRadio('', 'https://http-live.sr.se/p4stockholm-mp3-192')">🏙️ SR P4 Stockholm</button>
+                </div>
+                <p id="radioStatus" style="color: var(--neon-green); margin-bottom: 10px;">Välj en kanal ovan för att lyssna.</p>
+                <audio id="radioAudio" controls style="width: 100%;"></audio>
+            </div>
+
+            <!-- 06 SOUNDBOARD -->
+            <div id="soundboard" class="app-section">
+                <h2 class="section-title">🔊 DJ & Bio Soundboard</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+                    <button class="btn" onclick="playFx('laser')">🔫 Laser Shot</button>
+                    <button class="btn" onclick="playFx('coin')">🪙 Arcade Coin</button>
+                    <button class="btn" onclick="playFx('powerup')">🍄 Power Up</button>
+                    <button class="btn" onclick="playFx('bass')">💥 Cinema Bass</button>
+                    <button class="btn" onclick="playFx('alarm')">🚨 Sci-Fi Alarm</button>
+                    <button class="btn" onclick="playFx('win')">🏆 Level Win</button>
+                </div>
+            </div>
+
+            <!-- 07 GAME BOY -->
+            <div id="gameboy" class="app-section">
+                <h2 class="section-title">🟩 Game Boy Retro Console</h2>
+                <div class="console-wrapper">
+                    <div class="game-list">
+                        <div class="game-item selected" id="gb-opt-snake" onclick="selectGbGame('snake')"><span>🐍 Super Snake DX</span><span>▶</span></div>
+                        <div class="game-item" id="gb-opt-catch" onclick="selectGbGame('catch')"><span>⭐ Star Catcher</span><span>▶</span></div>
+                        <div class="game-item" id="gb-opt-dodge" onclick="selectGbGame('dodge')"><span>☄️ Meteor Dodger</span><span>▶</span></div>
+                    </div>
+                    <div class="handheld-screen gb-theme">
+                        <strong id="gbTitle">SUPER SNAKE DX</strong>
+                        <div style="font-size: 0.85rem;">Poäng: <span id="gbScore">0</span></div>
+                        <canvas id="gbCanvas" class="game-canvas" width="280" height="200"></canvas>
+                        <div class="dpad-controls">
+                            <button class="dpad-btn" onclick="gbInput('LEFT')">◀</button>
+                            <button class="dpad-btn" onclick="gbInput('UP')">▲</button>
+                            <button class="dpad-btn" onclick="gbInput('DOWN')">▼</button>
+                            <button class="dpad-btn" onclick="gbInput('RIGHT')">▶</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 08 NINTENDO -->
+            <div id="nintendo" class="app-section">
+                <h2 class="section-title">🕹️ Nintendo 8-Bit Arcade</h2>
+                <div class="console-wrapper">
+                    <div class="game-list">
+                        <div class="game-item selected" id="nes-opt-space" onclick="selectNesGame('space')"><span>🚀 Space Defender</span><span>▶</span></div>
+                        <div class="game-item" id="nes-opt-pong" onclick="selectNesGame('pong')"><span>🏓 Cyber Pong</span><span>▶</span></div>
+                        <div class="game-item" id="nes-opt-breakout" onclick="selectNesGame('breakout')"><span>🧱 Neon Breakout</span><span>▶</span></div>
+                    </div>
+                    <div class="handheld-screen nes-theme">
+                        <strong id="nesTitle" style="color: var(--nes-red);">SPACE DEFENDER 8-BIT</strong>
+                        <div style="font-size: 0.85rem;">Poäng: <span id="nesScore">0</span></div>
+                        <canvas id="nesCanvas" class="game-canvas" width="280" height="200"></canvas>
+                        <div class="dpad-controls">
+                            <button class="dpad-btn" onclick="nesInput('LEFT')">◀ Vänster</button>
+                            <button class="dpad-btn" onclick="nesInput('ACTION')">🔥 Skjut</button>
+                            <button class="dpad-btn" onclick="nesInput('RIGHT')">Höger ▶</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 09 NEON SYNTH A-K -->
+            <div id="synth" class="app-section">
+                <h2 class="section-title">🎹 Neon Synth Studio (A–K)</h2>
+                <p style="color: var(--text-dim); margin-bottom: 12px;">Spela med musen eller tangentbordet (A, W, S, E, D, F, T, G, Y, H, U, J, K). Byt oktav och slå på eko!</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px;">
+                    <select id="synthWave" style="max-width: 190px;">
+                        <option value="sawtooth">⚡ Neon Lead</option>
+                        <option value="square">👾 Retro 8-Bit Square</option>
+                        <option value="triangle">🌊 Mjuk Pad</option>
+                        <option value="sine">🔊 Djup Bas</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="changeOctave(-1)">🔽 Lägre Oktav</button>
+                    <span id="octaveDisplay" style="color: var(--neon-green); font-weight: bold;">Oktav: Normal (C4)</span>
+                    <button class="btn btn-secondary" onclick="changeOctave(1)">🔼 Högre Oktav</button>
+                    <button class="btn btn-secondary" id="echoBtn" onclick="toggleEcho()">🌌 Eko: AV</button>
+                </div>
+                <div id="pianoKeys" style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; padding: 16px; background: #040f08; border-radius: 14px; border: 1px solid var(--neon-green);"></div>
+            </div>
+
+            <!-- 10 SUNO PROMPT VAULT -->
+            <div id="suno" class="app-section">
+                <h2 class="section-title">📝 Suno Prompt & Låt-Vault</h2>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+                    <input type="text" id="sunoTitle" placeholder="Låttitel...">
+                    <input type="text" id="sunoStyle" placeholder="Musikstil (t.ex. Synthwave, 124 BPM, Swedish vocals)...">
+                    <textarea id="sunoLyrics" rows="4" placeholder="Skriv din låttext eller prompt här..."></textarea>
+                    <div><button class="btn" onclick="saveSunoPrompt()">💾 Spara i Vault</button></div>
+                </div>
+                <div id="sunoList" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+
+            <!-- 11 NOTES -->
+            <div id="notes" class="app-section">
+                <h2 class="section-title">📓 Snabb-Anteckningar</h2>
+                <textarea id="quickNotesArea" rows="10" style="max-width: 100%;" placeholder="Skriv idéer, filmtips eller kom-ihåg... Sparas automatiskt!" oninput="localStorage.setItem('dpp_notes', this.value)"></textarea>
+            </div>
+
+            <!-- 12 GEMINI LIVE AI CHAT (UPDATED TO GEMINI 3.8 FLASH) -->
+            <div id="aichat" class="app-section">
+                <h2 class="section-title">🤖 Gemini 3.8 Live AI Chat</h2>
+                <div style="background: #040f08; border: 1px solid rgba(0,255,102,0.35); border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+                        <span id="apiStatusBadge" style="font-size: 0.85rem; font-weight: bold; color: #ffae42;">⚪ Ingen API-nyckel sparad ännu</span>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: var(--neon-green); font-size: 0.85rem;">🔑 Hämta gratis Gemini API-nyckel ↗</a>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <input type="password" id="geminiApiKeyInput" placeholder="Klistra in din Gemini API-nyckel här...">
+                        <button class="btn" onclick="saveGeminiKey()">💾 Spara Nyckel</button>
+                        <button class="btn btn-danger" onclick="clearGeminiKey()">Rensa</button>
+                    </div>
+                </div>
+
+                <div id="aiChatBox" style="background: #040f08; border: 1px solid var(--neon-green); border-radius: 14px; padding: 15px; height: 270px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
+                    <div class="ai-msg ai-msg-bot"><strong>🤖 Gemini 3.8 AI:</strong> Hej David! Nu är jag uppgraderad till <strong>gemini-3.8-flash</strong>. Spara din API-nyckel ovan och fråga mig om vad som helst!</div>
+                </div>
+
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <input type="text" id="aiUserInput" placeholder="Fråga Gemini 3.8 om vad som helst..." onkeydown="if(event.key==='Enter') sendGeminiMessage()">
+                    <button class="btn" id="sendAiBtn" onclick="sendGeminiMessage()">✨ Fråga Gemini</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PROFILE FOOTER CARD -->
+        <div class="profile-footer-card">
+            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="updateProfileAvatar(this)">
+            <div class="profile-avatar-ring" onclick="document.getElementById('avatarFileInput').click()" title="Klicka för att byta profilbild">
+                <img id="profileAvatarImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2305180c'/><text x='50' y='56' font-size='36' text-anchor='middle' fill='%2300ff66' font-family='sans-serif'>DPP</text></svg>" alt="David Pedersen Pino">
+            </div>
+            <div class="profile-name">David Pedersen Pino</div>
+            <p style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 12px;">Creator • Gamer • Music Producer</p>
+            <button class="btn btn-secondary" onclick="document.getElementById('avatarFileInput').click()">📸 Välj / Byt Profilbild</button>
+        </div>
+    </main>
+
+    <!-- RIGHT COLUMN -->
+    <aside class="side-col">
+        <div class="col-label">🎮 Spel, Studio & AI</div>
+        <div class="nav-card" onclick="openTab('gameboy', this)">
+            <span class="icon">🟩</span>
+            <div><span class="num">07 / RETRO HANDHELD</span><h3>Game Boy</h3><p>3 spelbara klassiker</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('nintendo', this)">
+            <span class="icon">🕹️</span>
+            <div><span class="num">08 / 8-BIT ARCADE</span><h3>Nintendo 8-Bit</h3><p>Space, Pong & Breakout</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('synth', this)">
+            <span class="icon">🎹</span>
+            <div><span class="num">09 / MUSIC STUDIO</span><h3>Neon Synth A–K</h3><p>Oktaver, eko & 4 ljud</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('suno', this)">
+            <span class="icon">📝</span>
+            <div><span class="num">10 / CREATOR</span><h3>Suno Prompt Vault</h3><p>Spara låttexter & stilar</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('notes', this)">
+            <span class="icon">📓</span>
+            <div><span class="num">11 / NOTEPAD</span><h3>Anteckningar</h3><p>Sparas automatiskt</p></div>
+        </div>
+        <div class="nav-card" onclick="openTab('aichat', this)">
+            <span class="icon">🤖</span>
+            <div><span class="num">12 / GEMINI 3.8 LIVE</span><h3>AI Chat Hub</h3><p>Direktsvar från Google AI</p></div>
+        </div>
+    </aside>
+</div>
+
+<script>
+    function openTab(id, el) {
+        document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-card').forEach(c => c.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if (el) el.classList.add('active');
+    }
+
+    function openSmartUrl(url) {
+        window.open(url, 'MediaWindow', 'width=1280,height=740,menubar=no,toolbar=no,location=no');
+    }
+
+    function handlePlutoLink() {
+        const val = document.getElementById('plutoInput').value.trim();
+        if (!val) return;
+        if (val.endsWith('.mp4') || val.endsWith('.webm')) {
+            const v = document.getElementById('plutoVideo');
+            v.src = val;
+            v.play();
+        } else {
+            openSmartUrl(val);
+        }
+    }
+
+    // Movies (No duplicates)
+    const defaultMovies = [
+        { title: 'Hulk (2003)', url: 'https://www.youtube.com/feed/storefront?bp=ogUCKAQ%3D', locked: true },
+        { title: 'Terminator Genisys', url: 'https://www.youtube.com/feed/storefront?bp=ogUCKAQ%3D', locked: true }
+    ];
+    function getMovies() {
+        let saved = JSON.parse(localStorage.getItem('dpp_movies_v9') || 'null');
+        if (!saved) return [...defaultMovies];
+        const seen = new Set();
+        return saved.filter(m => {
+            const key = m.title.toLowerCase().trim();
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+    }
+    function renderMovies() {
+        const movies = getMovies();
+        const grid = document.getElementById('movieGrid');
+        grid.innerHTML = movies.map((m, idx) => `
+            <div style="background:#05130a; border:1px solid var(--neon-green); border-radius:12px; padding:14px;">
+                <h4 style="margin-bottom:8px;">🎬 ${m.title}</h4>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn" onclick="openSmartUrl('${m.url}')">▶ Spela</button>
+                    ${!m.locked ? `<button class="btn btn-danger" onclick="removeMovie(${idx})">Ta bort</button>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+    function addCustomMovie() {
+        const t = document.getElementById('newMovieTitle').value.trim();
+        const u = document.getElementById('newMovieUrl').value.trim() || 'https://www.youtube.com/feed/storefront?bp=ogUCKAQ%3D';
+        if (!t) return;
+        const movies = getMovies();
+        if (!movies.some(m => m.title.toLowerCase() === t.toLowerCase())) {
+            movies.push({ title: t, url: u, locked: false });
+            localStorage.setItem('dpp_movies_v9', JSON.stringify(movies));
+        }
+        document.getElementById('newMovieTitle').value = '';
+        document.getElementById('newMovieUrl').value = '';
+        renderMovies();
+    }
+    function removeMovie(idx) {
+        const movies = getMovies();
+        movies.splice(idx, 1);
+        localStorage.setItem('dpp_movies_v9', JSON.stringify(movies));
+        renderMovies();
+    }
+    function resetMovies() {
+        localStorage.removeItem('dpp_movies_v9');
+        renderMovies();
+    }
+
+    // Local Video & MP3
+    function loadLocalVideo(input) {
+        if (input.files[0]) {
+            const v = document.getElementById('localVideoPlayer');
+            v.src = URL.createObjectURL(input.files[0]);
+            v.play();
+        }
+    }
+    function loadMp3Files(input) {
+        const list = document.getElementById('mp3List');
+        const player = document.getElementById('audioPlayer');
+        list.innerHTML = '';
+        Array.from(input.files).forEach((file, i) => {
+            const url = URL.createObjectURL(file);
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-secondary';
+            btn.style.textAlign = 'left';
+            btn.textContent = '🎵 ' + file.name;
+            btn.onclick = () => { player.src = url; player.play(); };
+            list.appendChild(btn);
+            if (i === 0) player.src = url;
+        });
+    }
+
+    // Radio
+    function playRadio(m3u, streamUrl) {
+        const audio = document.getElementById('radioAudio');
+        audio.src = streamUrl;
+        audio.play();
+        document.getElementById('radioStatus').textContent = 'Spelar live-ström...';
+    }
+
+    // Audio Context for Synth & Soundboard
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playFx(type) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+        if (type === 'laser') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(900, now); osc.frequency.exponentialRampToValueAtTime(120, now + 0.25); }
+        else if (type === 'coin') { osc.type = 'square'; osc.frequency.setValueAtTime(987, now); osc.frequency.setValueAtTime(1318, now + 0.08); }
+        else if (type === 'powerup') { osc.type = 'triangle'; osc.frequency.setValueAtTime(300, now); osc.frequency.linearRampToValueAtTime(900, now + 0.35); }
+        else if (type === 'bass') { osc.type = 'sine'; osc.frequency.setValueAtTime(140, now); osc.frequency.exponentialRampToValueAtTime(35, now + 0.6); }
+        else if (type === 'alarm') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(600, now); osc.frequency.linearRampToValueAtTime(850, now + 0.3); }
+        else { osc.type = 'square'; osc.frequency.setValueAtTime(523, now); osc.frequency.setValueAtTime(659, now + 0.1); osc.frequency.setValueAtTime(784, now + 0.2); }
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc.start(now); osc.stop(now + 0.45);
+    }
+
+    // Neon Synth Piano A-K
+    let synthOctave = 1;
+    let echoEnabled = false;
+    const notes = [
+        { key: 'A', name: 'C', freq: 261.63, black: false },
+        { key: 'W', name: 'C#', freq: 277.18, black: true },
+        { key: 'S', name: 'D', freq: 293.66, black: false },
+        { key: 'E', name: 'D#', freq: 311.13, black: true },
+        { key: 'D', name: 'E', freq: 329.63, black: false },
+        { key: 'F', name: 'F', freq: 349.23, black: false },
+        { key: 'T', name: 'F#', freq: 369.99, black: true },
+        { key: 'G', name: 'G', freq: 392.00, black: false },
+        { key: 'Y', name: 'G#', freq: 415.30, black: true },
+        { key: 'H', name: 'A', freq: 440.00, black: false },
+        { key: 'U', name: 'A#', freq: 466.16, black: true },
+        { key: 'J', name: 'B', freq: 493.88, black: false },
+        { key: 'K', name: 'C2', freq: 523.25, black: false }
+    ];
+    function renderPiano() {
+        document.getElementById('pianoKeys').innerHTML = notes.map(n => `
+            <button onclick="playSynthNote(${n.freq})" style="width:${n.black?'40px':'52px'};height:${n.black?'110px':'155px'};background:${n.black?'#0b2916':'#eafff2'};color:${n.black?'#00ff66':'#031208'};border:2px solid #00ff66;border-radius:0 0 10px 10px;font-weight:bold;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:8px;">
+                <span>${n.name}</span><small>[${n.key}]</small>
+            </button>
+        `).join('');
+    }
+    function changeOctave(dir) {
+        if (dir === -1 && synthOctave > 0.5) synthOctave /= 2;
+        if (dir === 1 && synthOctave < 2) synthOctave *= 2;
+        const labels = { 0.5: 'Låg Bas (C3)', 1: 'Normal (C4)', 2: 'Hög Ljus (C5)' };
+        document.getElementById('octaveDisplay').innerText = 'Oktav: ' + labels[synthOctave];
+    }
+    function toggleEcho() {
+        echoEnabled = !echoEnabled;
+        document.getElementById('echoBtn').innerText = echoEnabled ? '🌌 Eko: PÅ' : '🌌 Eko: AV';
+    }
+    function playSynthNote(baseFreq) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = document.getElementById('synthWave').value;
+        osc.frequency.setValueAtTime(baseFreq * synthOctave, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.26, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (echoEnabled ? 1.1 : 0.45));
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        if (echoEnabled) {
+            const delay = audioCtx.createDelay();
+            const fb = audioCtx.createGain();
+            delay.delayTime.value = 0.24; fb.gain.value = 0.4;
+            gain.connect(delay); delay.connect(fb); fb.connect(delay); delay.connect(audioCtx.destination);
+        }
+        osc.start(); osc.stop(audioCtx.currentTime + (echoEnabled ? 1.1 : 0.45));
+    }
+    document.addEventListener('keydown', e => {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+        const found = notes.find(n => n.key === e.key.toUpperCase());
+        if (found) playSynthNote(found.freq);
+    });
+
+    // Suno Vault
+    function saveSunoPrompt() {
+        const title = document.getElementById('sunoTitle').value.trim();
+        const style = document.getElementById('sunoStyle').value.trim();
+        const lyrics = document.getElementById('sunoLyrics').value.trim();
+        if (!title && !lyrics) return;
+        const list = JSON.parse(localStorage.getItem('dpp_suno_v9') || '[]');
+        list.unshift({ title: title || 'Namnlös låt', style, lyrics });
+        localStorage.setItem('dpp_suno_v9', JSON.stringify(list));
+        document.getElementById('sunoTitle').value = '';
+        document.getElementById('sunoStyle').value = '';
+        document.getElementById('sunoLyrics').value = '';
+        renderSuno();
+    }
+    function renderSuno() {
+        const list = JSON.parse(localStorage.getItem('dpp_suno_v9') || '[]');
+        document.getElementById('sunoList').innerHTML = list.map((item, i) => `
+            <div style="background:#05130a; border:1px solid var(--neon-green); border-radius:10px; padding:12px;">
+                <strong>🎵 ${item.title}</strong> <span style="color:var(--neon-green); font-size:0.85rem;">(${item.style})</span>
+                <pre style="white-space:pre-wrap; font-size:0.85rem; color:var(--text-dim); margin:8px 0;">${item.lyrics}</pre>
+                <button class="btn btn-secondary" onclick="navigator.clipboard.writeText('${(item.style + '\n' + item.lyrics).replace(/'/g, '')}')">📋 Kopiera</button>
+                <button class="btn btn-danger" onclick="deleteSuno(${i})">Ta bort</button>
+            </div>
+        `).join('');
+    }
+    function deleteSuno(i) {
+        const list = JSON.parse(localStorage.getItem('dpp_suno_v9') || '[]');
+        list.splice(i, 1);
+        localStorage.setItem('dpp_suno_v9', JSON.stringify(list));
+        renderSuno();
+    }
+
+    // Playable Game Boy
+    let gbMode = 'snake', gbScore = 0, gbPlayerX = 120, gbFood = {x: 60, y: 60}, gbDir = 'RIGHT', gbSnake = [{x:100,y:100}];
+    function selectGbGame(mode) {
+        gbMode = mode; gbScore = 0; gbPlayerX = 120; gbSnake = [{x:100,y:100}];
+        document.getElementById('gbScore').innerText = '0';
+        document.querySelectorAll('#gameboy .game-item').forEach(el => el.classList.remove('selected'));
+        document.getElementById('gb-opt-' + mode).classList.add('selected');
+        const titles = { snake: 'SUPER SNAKE DX', catch: 'STAR CATCHER', dodge: 'METEOR DODGER' };
+        document.getElementById('gbTitle').innerText = titles[mode];
+    }
+    function gbInput(dir) {
+        gbDir = dir;
+        if (dir === 'LEFT') gbPlayerX = Math.max(10, gbPlayerX - 24);
+        if (dir === 'RIGHT') gbPlayerX = Math.min(240, gbPlayerX + 24);
+    }
+    setInterval(() => {
+        const c = document.getElementById('gbCanvas');
+        if (!c) return;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#8bac0f'; ctx.fillRect(0, 0, 280, 200);
+        ctx.fillStyle = '#0f380f';
+        if (gbMode === 'snake') {
+            let head = {...gbSnake[0]};
+            if (gbDir === 'RIGHT') head.x += 10; if (gbDir === 'LEFT') head.x -= 10;
+            if (gbDir === 'UP') head.y -= 10; if (gbDir === 'DOWN') head.y += 10;
+            if (head.x < 0) head.x = 270; if (head.x > 270) head.x = 0;
+            if (head.y < 0) head.y = 190; if (head.y > 190) head.y = 0;
+            gbSnake.unshift(head);
+            if (Math.abs(head.x - gbFood.x) < 12 && Math.abs(head.y - gbFood.y) < 12) {
+                gbScore += 10; document.getElementById('gbScore').innerText = gbScore;
+                gbFood = { x: Math.floor(Math.random()*25)*10, y: Math.floor(Math.random()*18)*10 };
+            } else { gbSnake.pop(); }
+            gbSnake.forEach(s => ctx.fillRect(s.x, s.y, 9, 9));
+            ctx.fillRect(gbFood.x, gbFood.y, 9, 9);
+        } else {
+            gbFood.y += 8;
+            if (gbFood.y > 195) {
+                if (Math.abs(gbFood.x - gbPlayerX) < 30 && gbMode === 'catch') { gbScore += 10; document.getElementById('gbScore').innerText = gbScore; }
+                if (Math.abs(gbFood.x - gbPlayerX) >= 30 && gbMode === 'dodge') { gbScore += 5; document.getElementById('gbScore').innerText = gbScore; }
+                gbFood = { x: Math.random()*250, y: 0 };
+            }
+            ctx.fillRect(gbPlayerX, 178, 34, 12);
+            ctx.fillRect(gbFood.x, gbFood.y, 12, 12);
+        }
+    }, 130);
+
+    // Playable Nintendo 8-Bit
+    let nesMode = 'space', nesScore = 0, nesX = 120, nesBall = {x:140, y:80, vx:5, vy:5}, nesBullet = null;
+    function selectNesGame(mode) {
+        nesMode = mode; nesScore = 0; nesX = 120; nesBall = {x:140, y:80, vx:5, vy:5};
+        document.getElementById('nesScore').innerText = '0';
+        document.querySelectorAll('#nintendo .game-item').forEach(el => el.classList.remove('selected'));
+        document.getElementById('nes-opt-' + mode).classList.add('selected');
+        const titles = { space: 'SPACE DEFENDER 8-BIT', pong: 'CYBER PONG', breakout: 'NEON BREAKOUT' };
+        document.getElementById('nesTitle').innerText = titles[mode];
+    }
+    function nesInput(cmd) {
+        if (cmd === 'LEFT') nesX = Math.max(10, nesX - 26);
+        if (cmd === 'RIGHT') nesX = Math.min(230, nesX + 26);
+        if (cmd === 'ACTION') nesBullet = { x: nesX + 18, y: 170 };
+    }
+    setInterval(() => {
+        const c = document.getElementById('nesCanvas');
+        if (!c) return;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#050806'; ctx.fillRect(0, 0, 280, 200);
+        ctx.fillStyle = '#00ff66'; ctx.fillRect(nesX, 180, 40, 10);
+        if (nesMode === 'space') {
+            ctx.fillStyle = '#ff2a3c'; ctx.fillRect(nesBall.x, 30, 24, 14);
+            nesBall.x += nesBall.vx; if (nesBall.x < 5 || nesBall.x > 250) nesBall.vx *= -1;
+            if (nesBullet) {
+                nesBullet.y -= 12;
+                ctx.fillStyle = '#fff'; ctx.fillRect(nesBullet.x, nesBullet.y, 4, 10);
+                if (nesBullet.y < 45 && Math.abs(nesBullet.x - nesBall.x) < 25) {
+                    nesScore += 25; document.getElementById('nesScore').innerText = nesScore;
+                    nesBullet = null;
+                } else if (nesBullet.y < 0) nesBullet = null;
+            }
+        } else {
+            nesBall.x += nesBall.vx; nesBall.y += nesBall.vy;
+            if (nesBall.x < 5 || nesBall.x > 270) nesBall.vx *= -1;
+            if (nesBall.y < 5) nesBall.vy *= -1;
+            if (nesBall.y > 172 && Math.abs(nesBall.x - (nesX + 20)) < 28) {
+                nesBall.vy *= -1; nesScore += 10; document.getElementById('nesScore').innerText = nesScore;
+            }
+            if (nesBall.y > 200) { nesBall = {x:140, y:60, vx:5, vy:5}; }
+            ctx.fillStyle = '#00ff66'; ctx.fillRect(nesBall.x, nesBall.y, 10, 10);
+        }
+    }, 60);
+
+    // Profile Avatar Persistence
+    function updateProfileAvatar(input) {
+        if (!input.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('profileAvatarImg').src = e.target.result;
+            localStorage.setItem('dpp_avatar_v9', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+
+    // GEMINI 3.8 FLASH LIVE API INTEGRATION
+    function updateApiBadge() {
+        const key = localStorage.getItem('dpp_gemini_key');
+        const badge = document.getElementById('apiStatusBadge');
+        if (key) {
+            badge.style.color = '#00ff66';
+            badge.textContent = '🟢 Gemini 3.8 Flash API Aktiv';
+            document.getElementById('geminiApiKeyInput').value = key;
+        } else {
+            badge.style.color = '#ffae42';
+            badge.textContent = '⚪ Ingen API-nyckel sparad ännu';
+        }
+    }
+    function saveGeminiKey() {
+        const val = document.getElementById('geminiApiKeyInput').value.trim();
+        if (!val) return;
+        localStorage.setItem('dpp_gemini_key', val);
+        updateApiBadge();
+    }
+    function clearGeminiKey() {
+        localStorage.removeItem('dpp_gemini_key');
+        document.getElementById('geminiApiKeyInput').value = '';
+        updateApiBadge();
+    }
+    function appendChatMessage(sender, htmlContent, isUser) {
+        const box = document.getElementById('aiChatBox');
+        const div = document.createElement('div');
+        div.className = 'ai-msg ' + (isUser ? 'ai-msg-user' : 'ai-msg-bot');
+        div.innerHTML = `<strong>${sender}:</strong> ${htmlContent}`;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+        return div;
+    }
+    function formatAiText(text) {
+        return text
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n/g, '<br>');
+    }
+    async function sendGeminiMessage() {
+        const input = document.getElementById('aiUserInput');
+        const btn = document.getElementById('sendAiBtn');
+        const prompt = input.value.trim();
+        if (!prompt) return;
+
+        const apiKey = localStorage.getItem('dpp_gemini_key');
+        if (!apiKey) {
+            appendChatMessage('⚠️ System', 'Klistra in och spara din Gemini API-nyckel i rutan ovan först!', false);
+            return;
+        }
+
+        appendChatMessage('👤 David', formatAiText(prompt), true);
+        input.value = '';
+        btn.disabled = true;
+
+        const loadingMsg = appendChatMessage('🤖 Gemini 3.8 AI', '<em>Skriver svar...</em>', false);
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error?.message || 'Kunde inte nå Gemini API');
+            }
+            const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Fick inget text-svar från Gemini.';
+            loadingMsg.innerHTML = `<strong>🤖 Gemini 3.8 AI:</strong><br>${formatAiText(replyText)}`;
+        } catch (err) {
+            loadingMsg.innerHTML = `<strong>⚠️ Fel från Gemini API:</strong> ${err.message}. Kontrollera att din API-nyckel är korrekt.`;
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+        renderMovies();
+        renderPiano();
+        renderSuno();
+        updateApiBadge();
+        const savedNotes = localStorage.getItem('dpp_notes');
+        if (savedNotes) document.getElementById('quickNotesArea').value = savedNotes;
+        const savedAvatar = localStorage.getItem('dpp_avatar_v9');
+        if (savedAvatar) document.getElementById('profileAvatarImg').src = savedAvatar;
+    });
+</script>
+</body>
+</html>
